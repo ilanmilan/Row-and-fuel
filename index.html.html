@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14283a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ROW & FUEL">
+<title>ROW & FUEL</title>
+<style>
+:root{--bg:#101c29;--panel:#1b2b3c;--panel2:#24394d;--line:#344b61;--text:#f4f7fa;--muted:#adbdcc;--gold:#e6b65d;--green:#8bc9a3}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}
+.app{max-width:650px;margin:auto;padding:16px 15px 28px}
+header{display:flex;justify-content:space-between;align-items:center;padding:7px 2px 16px}
+.brand{font-size:25px;font-weight:900;letter-spacing:2px}.brand span{color:var(--gold)}.sub{font-size:10px;color:var(--muted);letter-spacing:1.2px;margin-top:3px}
+.hero{background:linear-gradient(130deg,#28516a,#1a3045);border-radius:20px;padding:18px;margin-bottom:17px}
+.hero h1{font-size:21px;margin:5px 0}.muted{color:var(--muted)}.tiny{font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{background:#ffffff13;border-radius:12px;padding:10px}.stat b{font-size:20px;display:block}
+.tabs{position:fixed;z-index:5;bottom:0;left:0;right:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#142638f5;border-top:1px solid #3b5063;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;max-width:650px;margin:auto;backdrop-filter:blur(12px)}
+.tab{border:0;background:transparent;border-radius:12px;padding:7px 2px;color:#c1ced9;font-size:10px}.tab .ico{font-size:19px;display:block;margin-bottom:3px}.tab.active{background:var(--gold);color:#172536;font-weight:800}
+.page{display:none}.page.active{display:block}
+h2{font-size:21px;margin:4px 0 12px}h3{font-size:16px;margin:0 0 9px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:11px}
+.days{display:flex;gap:7px;overflow-x:auto;padding:3px 0 12px;scrollbar-width:none}.day{border:0;background:var(--panel2);border-radius:11px;padding:10px 13px;white-space:nowrap;font-size:13px}.day.active{background:var(--gold);color:#172536;font-weight:800}
+.meal{background:var(--panel2);border:1px solid #3b5268;border-radius:14px;padding:12px;margin:8px 0}
+.mealhead{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mealname{font-weight:700;font-size:14px;line-height:1.35}.mealtype{font-size:11px;color:var(--muted);margin-bottom:5px}
+.btn{border:0;border-radius:11px;background:var(--gold);color:#182738;font-weight:800;padding:10px 13px}.btn.small{font-size:12px;padding:8px 10px}.btn.secondary{background:#344c62;color:white}.btn.full{width:100%;margin-top:9px}
+.recipe{display:none;background:#17283a;border-radius:12px;padding:12px;margin-top:10px;border:1px solid #52677a;font-size:13px}.recipe.open{display:block}.recipe ul,.recipe ol{padding-left:20px}.recipe li{margin:6px 0}
+.row{display:flex;gap:9px;align-items:center}.between{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pill{display:inline-block;background:#344c62;border-radius:30px;padding:5px 9px;font-size:11px;color:#e4edf4}
+.field{width:100%;background:#101e2d;border:1px solid #425a70;border-radius:11px;color:white;padding:12px;margin:5px 0 12px}
+textarea.field{min-height:90px;resize:vertical}
+.progress{height:8px;background:#34495d;border-radius:20px;overflow:hidden;margin:9px 0}.progress div{height:100%;background:var(--green)}
+.checkrow{display:flex;align-items:flex-start;gap:10px;padding:11px 2px;border-top:1px solid #34485b;font-size:13px}.checkrow input{width:19px;height:19px;accent-color:var(--gold);flex:none}
+.group-title{font-weight:800;margin:15px 0 7px}
+.note{background:#20384a;border-radius:12px;padding:12px;font-size:12px;color:#d3e0e9;line-height:1.5}
+.chatmsg{background:var(--panel2);padding:12px;border-radius:12px;margin:9px 0;font-size:13px;line-height:1.5}
+a{color:#f2c76e}
+@media(min-width:600px){.app{padding:22px}.tabs{border-radius:18px 18px 0 0}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><div class="brand">ROW <span>&</span> FUEL</div><div class="sub">YOUR PERSONAL ROWING FOOD PLANNER</div></div><div style="font-size:37px">🚣</div></header>
+<div class="hero">
+ <div class="tiny muted">DEIN ERNÄHRUNGSPLAN</div><h1>Eat well. Row strong.</h1>
+ <div class="tiny muted">Für Schule, Training und Regeneration.</div>
+ <div class="stats"><div class="stat"><b id="mealStat">0</b><span class="tiny muted">Mahlzeiten abgehakt</span></div><div class="stat"><b>7</b><span class="tiny muted">Tage geplant</span></div><div class="stat"><b id="prepStat">0</b><span class="tiny muted">Prep-Aufgaben</span></div></div>
+</div>
+
+<section id="week" class="page active">
+ <div class="between"><h2>Deine Woche</h2><span class="pill">Wochenplan</span></div>
+ <div class="days" id="days"></div><div id="dayContent"></div>
+ <div class="note">Tipp: Tippe auf <b>Rezept öffnen</b>, um Zutaten und Zubereitung direkt unter der Mahlzeit zu sehen.</div>
+</section>
+
+<section id="prep" class="page">
+ <h2>Meal Prep Sonntag</h2><p class="tiny muted">Plane deine Kochsession und bereite die ersten Tage vor. Empfindliche Speisen für spätere Tage am besten einfrieren oder frisch zubereiten.</p>
+ <div class="card"><div class="between"><b>Vorbereitung</b><b id="prepCount">0/0</b></div><div class="progress"><div id="prepBar" style="width:0%"></div></div><div id="prepTasks"></div></div>
+ <div class="card"><h3>Migros-Einkaufsliste</h3><p class="tiny muted">Mengen sind Wochen-Richtwerte für eine Person und keine Essensgrenzen. Passe sie an deinen Hunger und deine Trainingswoche an.</p><div id="shopping"></div></div>
+</section>
+
+<section id="tracker" class="page">
+ <h2>Essens-Tracker</h2><p class="tiny muted">Markiere deine Mahlzeiten, wenn du sie gegessen hast. Es geht um Übersicht und regelmässige Versorgung – nicht ums Einschränken.</p>
+ <div class="card"><div class="between"><b>Diese Woche</b><b id="trackCount">0</b></div><div class="progress"><div id="trackBar" style="width:0%"></div></div><div id="trackList"></div></div>
+ <div class="card"><h3>Training & Wohlbefinden</h3><label class="tiny">Energie heute</label><select class="field" id="energy"><option>Sehr gut</option><option>Gut</option><option>Okay</option><option>Eher müde</option><option>Sehr müde</option></select><label class="tiny">Regeneration</label><select class="field" id="recovery"><option>Sehr gut</option><option>Gut</option><option>Okay</option><option>Schwierig</option></select><button class="btn full" id="saveWell">Tagesgefühl speichern</button><div id="wellStatus" class="tiny muted"></div></div>
+</section>
+
+<section id="feedback" class="page">
+ <h2>Wochenfeedback</h2><p class="tiny muted">Dein Feedback hilft dir, den nächsten Wochenplan alltagstauglicher zu machen.</p>
+ <div class="card"><label class="tiny">Was hat dir geschmeckt?</label><textarea id="liked" class="field" placeholder="Zum Beispiel: Poulet-Reis-Bowl ..."></textarea><label class="tiny">Was war nicht so gut?</label><textarea id="disliked" class="field" placeholder="Zum Beispiel: zu aufwendig ..."></textarea><label class="tiny">Was möchtest du ändern?</label><textarea id="changes" class="field" placeholder="Zum Beispiel: mehr vegetarische Gerichte ..."></textarea><label class="tiny">Wie gut hat die Planung funktioniert?</label><select id="rating" class="field"><option>Sehr gut</option><option>Gut</option><option>Okay</option><option>Verbesserungsbedarf</option></select><button class="btn full" id="saveFeedback">Feedback speichern</button><div id="feedbackStatus" class="tiny muted"></div></div>
+ <div class="card"><h3>Letztes Feedback</h3><div id="oldFeedback" class="tiny muted">Noch kein Feedback gespeichert.</div></div>
+</section>
+
+<section id="assistant" class="page">
+ <h2>KI-Ernährungsassistent</h2><p class="tiny muted">Frage ChatGPT nach Rezeptideen, einfachen Zutatenwechseln oder Hilfe beim Anpassen deiner Mahlzeiten.</p>
+ <div class="card">
+  <div class="chatmsg"><b>ROW & FUEL Assistent</b><br>Ich helfe dir, einfache und ausgewogene Mahlzeiten für Schule und Rudern zu planen. Du kannst zum Beispiel fragen: „Ich mag keinen Lachs. Was kann ich stattdessen essen?“</div>
+  <label class="tiny">Deine Frage oder gewünschte Änderung</label>
+  <textarea id="aiQuestion" class="field" placeholder="Zum Beispiel: Ersetze das Curry am Dienstag durch ein einfaches Gericht mit Zutaten von Migros."></textarea>
+  <button class="btn full" id="askAI">Frage an ChatGPT senden ↗</button>
+  <p class="tiny muted" style="margin-top:10px">Die Schaltfläche öffnet ChatGPT mit deiner Frage und dem nötigen Kontext. Du brauchst dafür keine API und kein kostenpflichtiges KI-Abo. Falls die Frage nicht automatisch eingefügt wird, kannst du sie kopieren.</p>
+ </div>
+ <div class="note">Der Assistent soll dir helfen, abwechslungsreich und ausreichend zu essen. Er erstellt keine strengen Kalorienziele und empfiehlt keine Einschränkungen, die deine Gesundheit oder Trainingsleistung gefährden.</div>
+</section>
+
+<section id="profile" class="page">
+ <h2>Dein Profil</h2><div class="card">
+ <label class="tiny">Name (optional)</label><input id="pname" class="field" placeholder="Dein Name">
+ <label class="tiny">Sportart</label><input id="sport" class="field" value="Rudern">
+ <label class="tiny">Trainings pro Woche</label><input id="sessions" type="number" class="field" value="11">
+ <label class="tiny">Trainingszeiten</label><textarea id="schedule" class="field">Dienstag morgens, Freitag nachmittags, Samstag drei Einheiten, Sonntag zwei Einheiten</textarea>
+ <label class="tiny">Lebensmittel, die du nicht magst</label><textarea id="avoid" class="field" placeholder="Zum Beispiel: Pilze ..."></textarea>
+ <label class="tiny">Essenswünsche</label><textarea id="preferences" class="field">Einfache, normale Zutaten; nicht zu teuer; gut für Meal Prep.</textarea>
+ <button class="btn full" id="saveProfile">Profil speichern</button><div id="profileStatus" class="tiny muted"></div>
+ </div>
+ <div class="note">Körpergrösse und Gewicht sind keine Voraussetzung für einen guten Speiseplan. Bei deinem Trainingspensum sind ausreichende Energie, Erholung und Wohlbefinden besonders wichtig.</div>
+</section>
+</div>
+
+<nav class="tabs">
+<button class="tab active" data-page="week"><span class="ico">📅</span>Woche</button>
+<button class="tab" data-page="prep"><span class="ico">🥘</span>Meal Prep</button>
+<button class="tab" data-page="tracker"><span class="ico">✓</span>Tracker</button>
+<button class="tab" data-page="feedback"><span class="ico">⭐</span>Feedback</button>
+<button class="tab" data-page="assistant"><span class="ico">💬</span>KI fragen</button>
+<button class="tab" data-page="profile"><span class="ico">👤</span>Profil</button>
+</nav>
+
+<script>
+const recipes={
+oats:["Overnight Oats mit Banane und Skyr","5 Min. + Kühlzeit",["100 g Haferflocken","250 ml Milch","150–200 g Skyr","1 Banane","Beeren und Nüsse"],["Haferflocken, Milch und Skyr im Glas verrühren.","Über Nacht kühl stellen.","Morgens Banane, Beeren und Nüsse dazugeben."]],
+porridge:["Porridge mit Beeren","10 Minuten",["80–100 g Haferflocken","250–300 ml Milch","Beeren","1 Banane","Joghurt und Nüsse"],["Haferflocken mit Milch unter Rühren erwärmen.","Cremig kochen und Beeren ergänzen.","Mit Banane, Joghurt und Nüssen servieren."]],
+eggs:["Rührei mit Vollkornbrot","10 Minuten",["2–3 Eier","2 Scheiben Vollkornbrot","Etwas Milch","Tomaten oder Gurke"],["Eier mit einem Schluck Milch verquirlen.","In einer Pfanne stocken lassen.","Mit Gemüse und Brot servieren."]],
+muesli:["Müesli mit Früchten","5 Minuten",["80–100 g Müesli","200 ml Milch","150 g Naturjoghurt","1 Stück Obst"],["Müesli in eine Schüssel geben.","Milch und Joghurt hinzufügen.","Obst schneiden und darübergeben."]],
+chicken:["Poulet-Reis-Bowl","25–30 Minuten",["150–200 g Poulet","100–120 g Reis (trocken)","Broccoli","Karotte","Naturjoghurt und Gewürze"],["Reis nach Packungsangabe kochen.","Poulet würzen und vollständig durchgaren.","Gemüse dünsten oder anbraten.","Mit Joghurtsauce servieren."]],
+salmon:["Lachs mit Kartoffeln und Gemüse","30 Minuten",["1 Lachsfilet","300–400 g Kartoffeln","Broccoli oder anderes Gemüse","Zitrone und Kräuter"],["Kartoffeln garen oder im Ofen backen.","Lachs würzen und vollständig garen.","Gemüse dünsten und alles servieren."]],
+curry:["Einfaches Poulet-Curry","25 Minuten",["150–200 g Poulet","100–120 g Reis (trocken)","1 Peperoni","1 Karotte","150 ml Kokosmilch","Currypulver"],["Reis kochen.","Poulet und Gemüse schneiden.","Poulet vollständig durchgaren, Gemüse ergänzen.","Kokosmilch und Curry dazugeben und köcheln lassen."]],
+lentil:["Linsen-Bolognese","30 Minuten",["100 g rote Linsen","100 g Pasta","200 g passierte Tomaten","1 Karotte","1 Zwiebel"],["Pasta kochen.","Zwiebel und Karotte schneiden und anbraten.","Linsen, Tomaten und etwas Wasser dazugeben.","15–20 Minuten köcheln lassen und mit Pasta servieren."]],
+tofu:["Tofu-Reis-Bowl","20 Minuten",["150–200 g Tofu","100 g Reis","Edamame","1 Karotte","Sojasauce"],["Reis kochen.","Tofu würfeln und anbraten.","Edamame und Karotte garen.","Mit Sojasauce abschmecken und servieren."]],
+couscous:["Couscous-Poulet-Bowl","20 Minuten",["100 g Couscous","150 g Poulet","Gurke und Tomaten","Feta","Naturjoghurt"],["Couscous nach Packungsangabe quellen lassen.","Poulet vollständig durchbraten.","Gemüse schneiden.","Mit Feta und Joghurtsauce anrichten."]],
+omelette:["Omelette mit Kartoffeln und Spinat","20 Minuten",["2–3 Eier","250 g Kartoffeln","Spinat","Etwas Käse"],["Kartoffeln würfeln und garen.","Eier verquirlen und in einer Pfanne stocken lassen.","Spinat und Kartoffeln hinzufügen und servieren."]],
+burrito:["Poulet-Bohnen-Wrap","20 Minuten",["2 Vollkornwraps","150 g Poulet","Bohnen und Mais","Salat und Tomaten","Joghurt"],["Poulet würzen und vollständig garen.","Bohnen und Mais erwärmen.","Gemüse schneiden.","Alles in Wraps füllen."]],
+pasta:["Vollkornpasta mit Hackfleisch","25 Minuten",["100–120 g Vollkornpasta","150 g Rinderhack","Passierte Tomaten","Karotte und Zwiebel"],["Pasta kochen.","Gemüse schneiden und anbraten.","Hackfleisch vollständig durchgaren.","Tomaten hinzufügen, köcheln lassen und servieren."]],
+chili:["Chili con Carne","30 Minuten",["150 g Rinderhack","Kidneybohnen","Gehackte Tomaten","Reis","Peperoni und Zwiebel"],["Reis kochen.","Hackfleisch mit Zwiebeln vollständig durchgaren.","Peperoni, Bohnen und Tomaten hinzufügen.","Würzen und etwa 15 Minuten köcheln lassen."]],
+potatoes:["Ofenkartoffeln mit Lachs und Quark","35 Minuten",["300–400 g Kartoffeln","1 Lachsfilet","Kräuterquark","Broccoli"],["Kartoffeln in Spalten schneiden und im Ofen backen.","Lachs garen.","Broccoli dünsten und mit Quark servieren."]],
+smoothie:["Bananen-Beeren-Smoothie","5 Minuten",["1 Banane","150 g Beeren","250 ml Milch","40 g Haferflocken"],["Alle Zutaten in einen Mixer geben.","Mixen, bis der Smoothie cremig ist."]]
+};
+const week=[
+["Montag","Rudertraining",[["Frühstück","Overnight Oats mit Banane und Skyr","oats"],["Znüni","Vollkornbrot mit Käse und Apfel","eggs"],["Mittag","Poulet-Reis-Bowl","chicken"],["Snack","Joghurt mit Beeren und Müesli","muesli"],["Abendessen","Vollkornpasta mit Hackfleisch","pasta"]]],
+["Dienstag","Morgentraining",[["Vor Training","Banane und Toast mit Honig","muesli"],["Frühstück danach","Porridge mit Beeren","porridge"],["Znüni","Ei-Sandwich","eggs"],["Mittag","Lachs mit Kartoffeln und Gemüse","salmon"],["Abendessen","Poulet-Curry mit Reis","curry"]]],
+["Mittwoch","Rudertraining",[["Frühstück","Rührei und Vollkornbrot","eggs"],["Znüni","Banane und Nüsse","muesli"],["Mittag","Linsen-Bolognese","lentil"],["Snack","Skyr mit Müesli","muesli"],["Abendessen","Tofu-Reis-Bowl","tofu"]]],
+["Donnerstag","Rudertraining",[["Frühstück","Apfel-Zimt-Overnight-Oats","oats"],["Znüni","Vollkornbrötchen mit Frischkäse","eggs"],["Mittag","Couscous-Poulet-Bowl","couscous"],["Snack","Banane und Nüsse","muesli"],["Abendessen","Omelette mit Kartoffeln und Spinat","omelette"]]],
+["Freitag","Nachmittagstraining",[["Frühstück","Müesli mit Milch und Früchten","muesli"],["Znüni","Käse-Sandwich und Apfel","eggs"],["Mittag","Poulet-Reis-Bowl","chicken"],["Vor Training","Banane und Toast","porridge"],["Abendessen","Poulet-Bohnen-Wraps","burrito"]]],
+["Samstag","3 Trainingseinheiten",[["Vor Training","Banane und Toast","porridge"],["Frühstück danach","Porridge mit Beeren","porridge"],["Zwischen den Trainings","Sandwich, Früchte und Joghurtdrink","eggs"],["Mittag","Poulet mit Reis und Gemüse","chicken"],["Vor Abendtraining","Banane und Müesliriegel","muesli"],["Abendessen","Pasta mit Lachs und Spinat","salmon"]]],
+["Sonntag","2 Trainingseinheiten",[["Vor Training","Banane und Toast","porridge"],["Frühstück danach","Rührei, Brot und Früchte","eggs"],["Mittag","Ofenkartoffeln mit Lachs und Broccoli","potatoes"],["Snack","Bananen-Beeren-Smoothie","smoothie"],["Abendessen","Chili con Carne mit Reis","chili"]]]
+];
+const tasks=[["Sonntag – Grundvorbereitung",["Reis für die ersten Tage kochen","Linsen-Bolognese zubereiten","Poulet für die ersten Gerichte vorbereiten","Gemüse waschen und schneiden","Overnight Oats für 2–3 Tage vorbereiten","Schulsnacks und Früchte bereitstellen"]],["Mittwoch – Frische ergänzen",["Weitere Reis- oder Couscous-Portionen kochen","Gemüse für Donnerstag und Freitag vorbereiten","Frühstück und Snacks ergänzen","Sandwich-Zutaten fürs Wochenende bereitstellen"]]];
+const groceries=[["Getreide & Brot",[["Haferflocken","750 g"],["Vollkornmüesli","500 g"],["Vollkornbrot","2 Laibe"],["Toastbrot","1 Packung"],["Vollkornwraps","1 Packung"],["Vollkornpasta","500–750 g"],["Reis","750 g–1 kg"],["Couscous","250 g"],["Kartoffeln","1.5–2 kg"],["Müesliriegel","1 Packung"]]],["Milchprodukte & Eier",[["Milch","3–4 Liter"],["Skyr / Naturjoghurt","1.5–2 kg"],["Quark","500 g"],["Frischkäse","1 Packung"],["Feta","1 Packung"],["Käse","200 g"],["Eier","10 Stück"],["Joghurtdrinks","3–4 Stück"]]],["Proteine",[["Pouletbrust","800 g–1 kg"],["Rinderhack","400–500 g"],["Lachs","400–600 g"],["Tofu","200 g"],["Rote Linsen","250 g"],["Kidneybohnen","2 Dosen"],["Edamame","1 Packung"]]],["Früchte",[["Bananen","12–14 Stück"],["Äpfel","5–6 Stück"],["Beeren","750 g"],["Orangen","4 Stück"],["Getrocknete Früchte","1 Packung"]]],["Gemüse",[["Broccoli","2 Stück"],["Karotten","750 g"],["Gurken","2 Stück"],["Tomaten","500 g"],["Peperoni","3 Stück"],["Spinat","300 g"],["Zwiebeln","4 Stück"],["Knoblauch","1 Knolle"],["Mais","1 Dose"],["Salat","1 Packung"],["Tiefkühlgemüse","750 g"]]],["Vorrat & Extras",[["Nussmix","200 g"],["Olivenöl","1 Flasche"],["Passierte Tomaten","2 Packungen"],["Gehackte Tomaten","2 Dosen"],["Kokosmilch","1 Dose"],["Honig","1 Glas"],["Konfitüre","1 Glas"],["Currypulver und Paprika","je 1 Dose"],["Sojasauce","1 Flasche"]]]];
+let dayIndex=0, eaten=load("rf-eaten",{}), prepared=load("rf-prep",{}), savedFeedback=load("rf-feedback",null);
+function load(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch(e){return f}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function mealId(d,m){return d+"|"+m[1]}
+function renderDays(){
+ document.getElementById("days").innerHTML=week.map((d,i)=>`<button class="day ${i===dayIndex?'active':''}" data-day="${i}">${d[0].slice(0,2)}</button>`).join("");
+ document.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{dayIndex=+b.dataset.day;renderDays()});
+ let d=week[dayIndex];
+ document.getElementById("dayContent").innerHTML=`<div class="card"><div class="between"><h3>${d[0]}</h3><span class="pill">${d[1]}</span></div><div class="tiny muted">Deine Mahlzeiten für heute</div></div>`+d[2].map((m,i)=>`<div class="meal"><div class="mealhead"><div><div class="mealtype">${m[0]}</div><div class="mealname">${m[1]}</div></div><div>${eaten[mealId(d[0],m)]?'✅':'🍽️'}</div></div><button class="btn small" style="margin-top:10px" data-recipe="${i}">Rezept öffnen ↓</button><div class="recipe" id="recipe-${i}"></div></div>`).join("");
+ document.querySelectorAll("[data-recipe]").forEach(b=>b.onclick=()=>{let i=+b.dataset.recipe,m=d[2][i],r=recipes[m[2]],el=document.getElementById("recipe-"+i);if(el.classList.contains("open")){el.classList.remove("open");b.textContent="Rezept öffnen ↓";return}el.innerHTML=`<b>Zutaten</b><ul>${r[2].map(x=>`<li>${esc(x)}</li>`).join("")}</ul><b>Zubereitung · ${esc(r[1])}</b><ol>${r[3].map(x=>`<li>${esc(x)}</li>`).join("")}</ol><button class="btn small" data-ask="${esc(m[1])}">Dieses Gericht anpassen ↗</button>`;el.classList.add("open");b.textContent="Rezept schliessen ↑";el.querySelector("[data-ask]").onclick=()=>{document.querySelector('[data-page="assistant"]').click();document.getElementById("aiQuestion").value="Bitte passe dieses Gericht an: "+m[1]+". Ich möchte einfache Zutaten aus der Migros und eine ausgewogene Mahlzeit passend zum Rudern.";};});
+}
+function renderTasks(){
+ let total=tasks.reduce((a,g)=>a+g[1].length,0),n=Object.values(prepared).filter(Boolean).length;
+ document.getElementById("prepStat").textContent=n;document.getElementById("prepCount").textContent=n+"/"+total;document.getElementById("prepBar").style.width=(n/total*100)+"%";
+ document.getElementById("prepTasks").innerHTML=tasks.map(g=>`<div class="group-title">${g[0]}</div>${g[1].map(t=>`<label class="checkrow"><input type="checkbox" data-task="${esc(t)}" ${prepared[t]?'checked':''}><span>${esc(t)}</span></label>`).join("")}`).join("");
+ document.querySelectorAll("[data-task]").forEach(c=>c.onchange=()=>{prepared[c.dataset.task]=c.checked;save("rf-prep",prepared);renderTasks();});
+ document.getElementById("shopping").innerHTML=groceries.map(g=>`<div class="group-title">${g[0]}</div>${g[1].map(x=>`<label class="checkrow"><input type="checkbox" data-grocery="${esc(x[0])}"><span style="flex:1">${esc(x[0])}</span><b style="color:var(--gold);font-size:12px">${esc(x[1])}</b></label>`).join("")}`).join("");
+}
+function renderTracker(){
+ let total=week.reduce((n,d)=>n+d[2].length,0),n=Object.values(eaten).filter(Boolean).length;
+ document.getElementById("mealStat").textContent=n;document.getElementById("trackCount").textContent=n+" / "+total;document.getElementById("trackBar").style.width=(n/total*100)+"%";
+ document.getElementById("trackList").innerHTML=week.map(d=>`<div class="group-title">${d[0]}</div>${d[2].map(m=>`<label class="checkrow"><input type="checkbox" data-eat="${esc(mealId(d[0],m))}" ${eaten[mealId(d[0],m)]?'checked':''}><span>${esc(m[0])} · ${esc(m[1])}</span></label>`).join("")}`).join("");
+ document.querySelectorAll("[data-eat]").forEach(c=>c.onchange=()=>{eaten[c.dataset.eat]=c.checked;save("rf-eaten",eaten);renderTracker();renderDays();});
+}
+function switchPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="tracker")renderTracker();}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
+document.getElementById("saveWell").onclick=()=>{save("rf-well",{energy:document.getElementById("energy").value,recovery:document.getElementById("recovery").value});document.getElementById("wellStatus").textContent="Gespeichert auf diesem Gerät."};
+document.getElementById("saveFeedback").onclick=()=>{savedFeedback={liked:document.getElementById("liked").value,disliked:document.getElementById("disliked").value,changes:document.getElementById("changes").value,rating:document.getElementById("rating").value};save("rf-feedback",savedFeedback);document.getElementById("feedbackStatus").textContent="Feedback gespeichert.";showFeedback()};
+function showFeedback(){document.getElementById("oldFeedback").textContent=savedFeedback?`Bewertung: ${savedFeedback.rating}. Geschätzt: ${savedFeedback.liked||"Keine Angabe"}. Nächstes Mal: ${savedFeedback.changes||"Keine Angabe"}.`:"Noch kein Feedback gespeichert."}
+document.getElementById("askAI").onclick=()=>{let q=document.getElementById("aiQuestion").value.trim();if(!q){alert("Schreib zuerst deine Frage auf.");return}let prompt="Du bist mein ROW & FUEL Ernährungsassistent. Hilf mir mit einfachen, normalen und bezahlbaren Lebensmitteln aus der Migros. Ich bin ein jugendlicher Ruderer mit etwa 11 Trainingseinheiten pro Woche, teils langen Einheiten. Unterstütze ausreichende Energiezufuhr, Wachstum, Gesundheit und Regeneration. Gib keine strengen Kalorien- oder Abnehmziele und empfehle keine Einschränkungen. Meine Frage: "+q;window.open("https://chatgpt.com/?q="+encodeURIComponent(prompt),"_blank");};
+document.getElementById("saveProfile").onclick=()=>{let p={};["pname","sport","sessions","schedule","avoid","preferences"].forEach(k=>p[k]=document.getElementById(k).value);save("rf-profile",p);document.getElementById("profileStatus").textContent="Profil auf diesem Gerät gespeichert."};
+function loadProfile(){let p=load("rf-profile",null);if(p)Object.keys(p).forEach(k=>{let el=document.getElementById(k);if(el)el.value=p[k]});let w=load("rf-well",null);if(w){document.getElementById("energy").value=w.energy;document.getElementById("recovery").value=w.recovery}}
+renderDays();renderTasks();renderTracker();showFeedback();loadProfile();
+})();
+</script>
+</body>
+</html>
